@@ -10,11 +10,13 @@ export default class Brick {
         this.position = { x: 40, y: 0 };
         this.brickBlocksPositions = [this.position];
         this.game = game;
-        this.colNumber = 4;
+        this.columnsQty = 4;
         this.brickShape = this.getRandomBrickShape();
         this.brickShapeState = 0;
         this.blockSize = 20;
         this.timeoutDone = true;
+        this.speedX = 0;
+        this.speedY = 0;
     }
 
     draw(ctx) {
@@ -38,8 +40,8 @@ export default class Brick {
 
         shape.forEach((number, index) => {
             if (number === 1) {
-                row = Math.floor(index / this.colNumber);
-                column = index % this.colNumber;
+                row = Math.floor(index / this.columnsQty);
+                column = index % this.columnsQty;
                 const currentBlockPosX = position.x + (column * this.blockSize);
                 const currentBlockPosY = position.y + (row * this.blockSize);
                 blocksPositions.push({ x: currentBlockPosX, y: currentBlockPosY });
@@ -49,56 +51,62 @@ export default class Brick {
         return blocksPositions;
     }
 
+    checkIfAnyBlockHasSamePosition(brick, position) {
+        const brickPositions = this.convertShapeToPositions(brick, position);
+        return brickPositions.some(currentBlockPos => {
+            return this.game.fallenBricksBlocksPositions
+                .some(fallenBlockPos => fallenBlockPos.x === currentBlockPos.x && fallenBlockPos.y === currentBlockPos.y);
+        });
+    }
+
     update() {
         if (this.timeoutDone) {
             this.timeoutDone = !this.timeoutDone;
             setTimeout(() => {
-                this.position.y += 20;
+                this.speedY = 20;
                 this.timeoutDone = !this.timeoutDone;
             }, 500);
         }
+
+        this.updatePositionBySpeed();
     }
 
-    checkIfAnyBlockHasSamePosition(brick, position) {
-        let row = 0;
-        let column = 0;
+    updatePositionBySpeed() {
+        this.position.x += this.speedX;
+        this.position.y += this.speedY;
 
-        const brickPositions = this.convertShapeToPositions(brick, position);
-        brickPositions.some(currentBlockPos => {
-            return this.game.fallenBricksBlocksPositions
-            .some(fallenBlockPos => fallenBlockPos.x === currentBlockPos.x && fallenBlockPos.y === currentBlockPos.y); 
-        });
+        this.speedX = 0;
+        this.speedY = 0;
     }
 
     rotate() {
         let newBrickShapeState = this.brickShapeState < this.brickShape.length - 1 ? this.brickShapeState + 1 : 0;
-        if (this.areAllBlocksBeforeBorder(this.brickShape[newBrickShapeState], 0) &&
-            this.areAllBlocksBeforeBorder(this.brickShape[newBrickShapeState], this.game.gameWidth - 20) && 
+        if (this.areAllBlocksWithinBorders(this.brickShape[newBrickShapeState], this.position) &&
             !this.checkIfAnyBlockHasSamePosition(this.brickShape[newBrickShapeState], this.position)) {
             this.brickShapeState = newBrickShapeState;
         }
     }
 
-    areAllBlocksBeforeBorder(bricks, border) {
-        const brickPositions = this.convertShapeToPositions(bricks, this.position);
-        return !brickPositions.some(position => position.x === border);
+    areAllBlocksWithinBorders(bricks, position) {
+        const blocksPositions = this.convertShapeToPositions(bricks, position);
+        return !blocksPositions.some(blockPosition => blockPosition.x < 0 || blockPosition.x > this.game.gameWidth - 20);
     }
 
     moveLeft() {
-        if (this.areAllBlocksBeforeBorder(this.brickShape[this.brickShapeState], 0) && 
-            !this.checkIfAnyBlockHasSamePosition(this.brickShape[this.brickShapeState], { x: this.position.x - 20, y: this.position.y})) {
-            this.position.x -= 20;
+        if (this.areAllBlocksWithinBorders(this.brickShape[this.brickShapeState], { x: this.position.x - 20, y: this.position.y }) &&
+            !this.checkIfAnyBlockHasSamePosition(this.brickShape[this.brickShapeState], { x: this.position.x - 20, y: this.position.y })) {
+            this.speedX = -20;
         }
     }
 
     moveRight() {
-        if (this.areAllBlocksBeforeBorder(this.brickShape[this.brickShapeState], this.game.gameWidth - 20) && 
-            !this.checkIfAnyBlockHasSamePosition(this.brickShape[this.brickShapeState], { x: this.position.x + 20, y: this.position.y})) {
-            this.position.x += 20;
+        if (this.areAllBlocksWithinBorders(this.brickShape[this.brickShapeState], { x: this.position.x + 20, y: this.position.y }) &&
+            !this.checkIfAnyBlockHasSamePosition(this.brickShape[this.brickShapeState], { x: this.position.x + 20, y: this.position.y })) {
+            this.speedX = 20;
         }
     }
 
     moveDown() {
-        this.position.y += 20;
+        this.speedY = 20;
     }
 }

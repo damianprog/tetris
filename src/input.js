@@ -1,5 +1,5 @@
 export default class InputHandler {
-    constructor(brick) {
+    constructor(brick, game) {
         this.brick = brick;
         document.addEventListener("keydown", event => {
             switch (event.key) {
@@ -18,6 +18,10 @@ export default class InputHandler {
                 case "ArrowUp":
                     this.brick.rotate();
                     break;
+
+                case "Escape":
+                    game.pause();
+                break;
             }
         });
     }
