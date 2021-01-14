@@ -12,7 +12,7 @@ export default class Game {
     constructor(gameWidth, gameHeight) {
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
-        this.gameState = GAME_STATE.GAMEOVER;
+        this.gameState = GAME_STATE.WELCOME_MENU;
         this.gameOverInfo = document.querySelector(".game-over-info");
         this.welcomeInfo = document.querySelector(".welcome-info");
         this.linesQty = document.querySelector(".lines-qty");
