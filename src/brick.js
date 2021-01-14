@@ -7,8 +7,8 @@ export default class Brick {
     }
 
     constructor(game) {
-        this.position = { x: 40, y: 0 };
-        this.brickBlocksPositions = [this.position];
+        this.position = { x: 40, y: -20 };
+        this.brickBlocksPositions = [];
         this.game = game;
         this.columnsQty = 4;
         this.brickShape = this.getRandomBrickShape();
@@ -22,15 +22,7 @@ export default class Brick {
     draw(ctx) {
         ctx.fillStyle = "#0d47a1";
 
-        this.brickBlocksPositions = this.convertShapeToPositions(this.brickShape[this.brickShapeState], this.position);
         this.brickBlocksPositions.forEach(position => ctx.fillRect(position.x, position.y, this.blockSize, this.blockSize))
-
-        const lastBrickPosY = this.brickBlocksPositions[this.brickBlocksPositions.length - 1].y + 20;
-
-        if (lastBrickPosY >= this.game.gameHeight || this.checkIfAnyBlockHasSamePosition(this.brickShape[this.brickShapeState], { x: this.position.x, y: this.position.y + 20 })) {
-            this.game.onBrickCollision();
-            return;
-        }
     }
 
     convertShapeToPositions(shape, position) {
@@ -69,6 +61,15 @@ export default class Brick {
         }
 
         this.updatePositionBySpeed();
+
+        this.brickBlocksPositions = this.convertShapeToPositions(this.brickShape[this.brickShapeState], this.position);
+
+        const lastBrickPosY = this.brickBlocksPositions[this.brickBlocksPositions.length - 1].y + 20;
+
+        if (lastBrickPosY >= this.game.gameHeight || this.checkIfAnyBlockHasSamePosition(this.brickShape[this.brickShapeState], { x: this.position.x, y: this.position.y + 20 })) {
+            this.game.onBrickCollision();
+            return;
+        }
     }
 
     updatePositionBySpeed() {

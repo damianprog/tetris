@@ -1,19 +1,34 @@
 <!DOCTYPE html>
 <html lang="eng">
     <head>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
         <title>Tetris</title>
         <meta charset="UTF-8"/>
 
         <style>
+            @font-face {
+                font-family: 'PressStart2P';
+                src: url("assets/fonts/PressStart2P-Regular.ttf");
+            }
+
             body {
-                display: flex;
-                justify-content: center;
+                font-family: 'PressStart2P';
                 background: #560027;
+                
             }
 
             .main-container {
                 position: relative;
-                margin-top: 40px;
+                width: 200px;
+                height: 400px;
+                margin: 40px auto 0 auto;
+                display: flex;
+            }
+
+            .lines {
+                color: #fff;
+                margin: 0 0 0 10px;
+                white-space: nowrap;
             }
 
             canvas {
@@ -25,44 +40,41 @@
                 border-collapse: collapse;
             }
 
-            table {
+            table, .game-over-info, .welcome-info {
                 position: absolute;
-                width: 200px;
-                height: 400px;
+                width: 100%;
+                height: 100%;
                 top: 0;
                 left: 0;
             }
+
+            .game-over-info, .welcome-info {
+                display: none;
+                color: #fff;
+                text-align: center;
+                line-height: 1.7em;
+                background: rgba(0,0,0,0.5);
+                user-select: none;
+            }
+
         </style>
     </head>
 
     <body>
         <div class="main-container">
-            <table>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-            </table>
+            <div class="welcome-info">
+                <p>Tetris</p>
+                <p>Press<br>SPACEBAR<br>to start</p>
+            </div>
+            <div class="game-over-info">
+                <p>Game Over!</p>
+                <p>Press<br>SPACEBAR<br>to restart</p>
+            </div>
             <canvas width="200" height="400">
-                
             </canvas>
+            <p class="lines">Lines:<span class="lines-qty"></span></p>
         </div>
+        
         
 
         <script type="module" src="src/index.js"></script>

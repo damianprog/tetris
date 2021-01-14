@@ -19,9 +19,13 @@ export default class InputHandler {
                     this.brick.rotate();
                     break;
 
+                case " ":
+                    game.start();
+                    break;
+
                 case "Escape":
                     game.pause();
-                break;
+                    break;
             }
         });
     }

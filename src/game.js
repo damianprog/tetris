@@ -12,10 +12,32 @@ export default class Game {
     constructor(gameWidth, gameHeight) {
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
-        this.gameState = GAME_STATE.RUNNING;
-        this.activeBrick = new Brick(this);
+        this.gameState = GAME_STATE.WELCOME_MENU;
+        this.gameOverInfo = document.querySelector(".game-over-info");
+        this.welcomeInfo = document.querySelector(".welcome-info");
+        this.linesQty = document.querySelector(".lines-qty");
         this.inputHandler = new InputHandler(this.activeBrick, this);
-        this.fallenBricksBlocksPositions = []
+        this.initializeDefaults();
+    }
+
+    initializeDefaults() {
+        this.fallenBricksBlocksPositions = [];
+        this.activeBrick = new Brick(this);
+        this.inputHandler.updateBrick(this.activeBrick);
+        this.linesQty.innerHTML = 0;
+    }
+
+    start() {
+        if (this.gameState === GAME_STATE.WELCOME_MENU && this.gameState !== GAME_STATE.GAMEOVER) {
+            this.initializeDefaults();
+            this.gameState = GAME_STATE.RUNNING;
+        }
+    }
+
+    setFontStyle(ctx) {
+        ctx.font = "15px PressStart2P";
+        ctx.fillStyle = "white";
+        ctx.textAlign = "center";
     }
 
     draw(ctx) {
@@ -27,7 +49,9 @@ export default class Game {
     }
 
     update() {
-        if (this.gameState === GAME_STATE.GAMEOVER || this.gameState === GAME_STATE.PAUSED) return;
+        this.gameOverInfo.style.display = this.gameState === GAME_STATE.GAMEOVER ? "block" : "none";
+        this.welcomeInfo.style.display = this.gameState === GAME_STATE.WELCOME_MENU ? "block" : "none";
+        if (this.gameState !== GAME_STATE.RUNNING) return;
         this.activeBrick.update();
     }
 
@@ -36,10 +60,9 @@ export default class Game {
     }
 
     pause() {
-        if (this.gameState !== GAME_STATE.GAMEOVER) {
+        if (this.gameState === GAME_STATE.RUNNING || this.gameState === GAME_STATE.PAUSED) {
             this.gameState = this.gameState === GAME_STATE.RUNNING ? GAME_STATE.PAUSED : GAME_STATE.RUNNING;
-            console.log("this.gameState: " + this.gameState);
-        } 
+        }
     }
 
     onBrickCollision() {
@@ -47,25 +70,45 @@ export default class Game {
         this.activeBrick = new Brick(this);
         this.inputHandler.updateBrick(this.activeBrick);
         this.resolveFullLine();
+        this.resolveGameOver();
+    }
+
+    getBlocksPosYQtyMap() {
+        const blocksPosYQtyMap = new Map();
+
+        this.fallenBricksBlocksPositions.forEach(block => {
+            const blockPosYQty = blocksPosYQtyMap.get(block.y);
+            const incrementedBlockPosYQty = blockPosYQty ? blockPosYQty + 1 : 1;
+            blocksPosYQtyMap.set(block.y, incrementedBlockPosYQty);
+        });
+
+        return blocksPosYQtyMap;
+    }
+
+    removeFullLines(posYFull) {
+        this.fallenBricksBlocksPositions = this.fallenBricksBlocksPositions.filter(position => posYFull.indexOf(position.y) === -1);
+    }
+
+    updateFallenBlocksPosY(posYFull) {
+        this.fallenBricksBlocksPositions.forEach((block, index) => {
+            const fullLinesBelowQty = posYFull.filter(posY => posY > block.y).length;
+            this.fallenBricksBlocksPositions[index].y += (fullLinesBelowQty * 20);
+        });
     }
 
     resolveFullLine() {
-        const yPosOccurencies = new Map();
-        const yPosFull = [];
-        this.fallenBricksBlocksPositions.forEach(block => {
-            const currentPosYQty = yPosOccurencies.get(block.y);
-            const newCurrentPosYQty = currentPosYQty ? currentPosYQty + 1 : 1;
-            if (newCurrentPosYQty === 10) yPosFull.push(block.y);
-            yPosOccurencies.set(block.y, newCurrentPosYQty);
-        });
+        const blocksPosYQtyMap = this.getBlocksPosYQtyMap();
+        const posYFull = [...blocksPosYQtyMap.keys()].filter(posY => blocksPosYQtyMap.get(posY) === 10);
 
-        if (yPosFull.length > 0) {
-            this.fallenBricksBlocksPositions = this.fallenBricksBlocksPositions.filter(position => yPosFull.indexOf(position.y) === -1);
-
-            this.fallenBricksBlocksPositions.forEach((block, index) => {
-                const smallerYQty = yPosFull.filter(yPos => yPos > block.y).length;
-                this.fallenBricksBlocksPositions[index].y += (smallerYQty * 20);
-            });
+        if (posYFull.length > 0) {
+            this.removeFullLines(posYFull);
+            this.updateFallenBlocksPosY(posYFull);
+            this.linesQty.innerHTML = parseInt(this.linesQty.innerHTML) + 1;
         }
+    }
+
+    resolveGameOver() {
+        const isGameOver = this.fallenBricksBlocksPositions.some(block => block.y <= 0);
+        if (isGameOver) this.gameState = GAME_STATE.GAMEOVER;
     }
 }
