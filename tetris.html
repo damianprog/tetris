@@ -1,82 +1,101 @@
 <!DOCTYPE html>
 <html lang="eng">
-    <head>
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <title>Tetris</title>
-        <meta charset="UTF-8"/>
 
-        <style>
-            @font-face {
-                font-family: 'PressStart2P';
-                src: url("assets/fonts/PressStart2P-Regular.ttf");
-            }
+<head>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <title>Tetris</title>
+    <meta charset="UTF-8" />
 
-            body {
-                font-family: 'PressStart2P';
-                background: #560027;
-                
-            }
+    <style>
+        @font-face {
+            font-family: 'PressStart2P';
+            src: url("assets/fonts/PressStart2P-Regular.ttf");
+        }
 
-            .main-container {
-                position: relative;
-                width: 200px;
-                height: 400px;
-                margin: 40px auto 0 auto;
-                display: flex;
-            }
+        body {
+            font-family: 'PressStart2P';
+            background: #560027;
 
-            .lines {
-                color: #fff;
-                margin: 0 0 0 10px;
-                white-space: nowrap;
-            }
+        }
 
-            canvas {
-                background: #fff;
-            }
+        .main-container {
+            position: relative;
+            width: 200px;
+            height: 400px;
+            margin: 40px auto 0 auto;
+            display: flex;
+        }
 
-            table, td {
-                border: 1px solid #000;
-                border-collapse: collapse;
-            }
+        .labels {
+            color: #fff;
+            margin: 0 0 0 10px;
+            white-space: nowrap;
+        }
 
-            table, .game-over-info, .welcome-info {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                top: 0;
-                left: 0;
-            }
+        .labels p {
+            margin: 0 0 25px 0;
+            line-height: 1.3em;
+        }
 
-            .game-over-info, .welcome-info {
-                display: none;
-                color: #fff;
-                text-align: center;
-                line-height: 1.7em;
-                background: rgba(0,0,0,0.5);
-                user-select: none;
-            }
+        canvas {
+            background: #fff;
+        }
 
-        </style>
-    </head>
+        table,
+        td {
+            border: 1px solid #000;
+            border-collapse: collapse;
+        }
 
-    <body>
-        <div class="main-container">
-            <div class="welcome-info">
-                <p>Tetris</p>
-                <p>Press<br>SPACEBAR<br>to start</p>
-            </div>
-            <div class="game-over-info">
-                <p>Game Over!</p>
-                <p>Press<br>SPACEBAR<br>to restart</p>
-            </div>
-            <canvas width="200" height="400">
-            </canvas>
-            <p class="lines">Lines:<span class="lines-qty"></span></p>
+        table,
+        .game-over-info,
+        .welcome-info {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .game-over-info,
+        .welcome-info {
+            display: none;
+            color: #fff;
+            text-align: center;
+            line-height: 1.7em;
+            background: rgba(0, 0, 0, 0.5);
+            user-select: none;
+        }
+
+        .new-best-score {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="welcome-info">
+            <p>Tetris</p>
+            <p>Press<br>SPACEBAR<br>to start</p>
         </div>
-        
-        
+        <div class="game-over-info">
+            <p>Game Over</p>
+            <p class="new-best-score">New Best Score!<br><span class="new-best-score-qty"></span></p>
+            <p>Press<br>SPACEBAR<br>to restart</p>
+        </div>
+        <canvas width="200" height="400">
+        </canvas>
+        <div class="labels">
+            <p>Lines:<span class="lines-qty"></span></p>
+            <p>Score:<span class="score-qty"></span></p>
+            <p>Best<br>Score:<span class="best-score-qty"></span></p>
+        </div>
+    </div>
 
-        <script type="module" src="src/index.js"></script>
-    </body>
+
+
+    <script type="module" src="src/index.js"></script>
+</body>
+
 </html>
