@@ -1,12 +1,7 @@
 import InputHandler from "/src/input.js";
 import Brick from "/src/brick.js";
-
-const GAME_STATE = {
-    WELCOME_MENU: 0,
-    PAUSED: 1,
-    RUNNING: 2,
-    GAMEOVER: 3
-};
+import {GAME_STATE} from "/src/gameStates.js"; 
+import {drawBlock} from "/src/drawBlock.js";
 
 export default class Game {
     constructor(gameWidth, gameHeight) {
@@ -15,6 +10,7 @@ export default class Game {
         this.gameState = GAME_STATE.WELCOME_MENU;
         this.gameOverInfo = document.querySelector(".game-over-info");
         this.welcomeInfo = document.querySelector(".welcome-info");
+        this.pauseInfo = document.querySelector(".pause-info");
         this.linesQty = document.querySelector(".lines-qty");
         this.scoreQty = document.querySelector(".score-qty");
         this.bestScoreQty = document.querySelector(".best-score-qty");
@@ -56,19 +52,22 @@ export default class Game {
 
     draw(ctx) {
         this.activeBrick.draw(ctx);
-
-        this.fallenBricksBlocksPositions.forEach(position => {
-            ctx.fillRect(position.x, position.y, this.activeBrick.blockSize, this.activeBrick.blockSize);
-        });
+        this.fallenBricksBlocksPositions.forEach(position => drawBlock(ctx, position));
     }
 
     update() {
-        this.gameOverInfo.style.display = this.gameState === GAME_STATE.GAMEOVER ? "block" : "none";
-        this.newBestScore.style.display = this.gameState === GAME_STATE.GAMEOVER &&
-             parseInt(this.scoreQty.innerHTML) >= parseInt(this.bestScoreQty.innerHTML) ? "block" : "none";
-        this.welcomeInfo.style.display = this.gameState === GAME_STATE.WELCOME_MENU ? "block" : "none";
+        this.showInfo();
         if (this.gameState !== GAME_STATE.RUNNING) return;
         this.activeBrick.update();
+    }
+
+    showInfo() {
+        this.gameOverInfo.style.display = this.gameState === GAME_STATE.GAMEOVER ? "block" : "none";
+        this.pauseInfo.style.display = this.gameState === GAME_STATE.PAUSED ? "block" : "none";
+        this.newBestScore.style.display = this.gameState === GAME_STATE.GAMEOVER &&
+            parseInt(this.scoreQty.innerHTML) >= parseInt(this.bestScoreQty.innerHTML) &&
+            parseInt(this.scoreQty.innerHTML) != 0 ? "block" : "none";
+        this.welcomeInfo.style.display = this.gameState === GAME_STATE.WELCOME_MENU ? "block" : "none";
     }
 
     clear(ctx) {
@@ -139,6 +138,6 @@ export default class Game {
         if (isGameOver) {
             this.gameState = GAME_STATE.GAMEOVER;
             this.setBestScore();
-        } 
+        }
     }
 }

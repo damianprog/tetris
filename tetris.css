@@ -31,13 +31,7 @@ canvas {
     background: #fff;
 }
 
-table,
-td {
-    border: 1px solid #000;
-    border-collapse: collapse;
-}
-
-table,
+.pause-info,
 .game-over-info,
 .welcome-info {
     position: absolute;
@@ -47,6 +41,7 @@ table,
     left: 0;
 }
 
+.pause-info,
 .game-over-info,
 .welcome-info {
     color: #fff;
@@ -56,6 +51,7 @@ table,
     user-select: none;
 }
 
+.pause-info,
 .game-over-info,
 .welcome-info,
 .new-best-score {

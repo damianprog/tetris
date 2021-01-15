@@ -1,4 +1,7 @@
+import Game from "/src/game.js";
+import {GAME_STATE} from "/src/gameStates.js";
 import { shapes } from "/src/brickShapes.js";
+import {drawBlock} from "/src/drawBlock.js";
 
 export default class Brick {
 
@@ -20,9 +23,7 @@ export default class Brick {
     }
 
     draw(ctx) {
-        ctx.fillStyle = "#0d47a1";
-
-        this.brickBlocksPositions.forEach(position => ctx.fillRect(position.x, position.y, this.blockSize, this.blockSize))
+        this.brickBlocksPositions.forEach(position => drawBlock(ctx, position));
     }
 
     convertShapeToPositions(shape, position) {
@@ -93,16 +94,20 @@ export default class Brick {
         return !blocksPositions.some(blockPosition => blockPosition.x < 0 || blockPosition.x > this.game.gameWidth - 20);
     }
 
+    canChangeXPosition(speedX) {
+        return this.areAllBlocksWithinBorders(this.brickShape[this.brickShapeState], { x: this.position.x + speedX, y: this.position.y }) &&
+            !this.checkIfAnyBlockHasSamePosition(this.brickShape[this.brickShapeState], { x: this.position.x + speedX, y: this.position.y }) &&
+            this.game.gameState === GAME_STATE.RUNNING;
+    }
+
     moveLeft() {
-        if (this.areAllBlocksWithinBorders(this.brickShape[this.brickShapeState], { x: this.position.x - 20, y: this.position.y }) &&
-            !this.checkIfAnyBlockHasSamePosition(this.brickShape[this.brickShapeState], { x: this.position.x - 20, y: this.position.y })) {
+        if (this.canChangeXPosition(-20)) {
             this.speedX = -20;
         }
     }
 
     moveRight() {
-        if (this.areAllBlocksWithinBorders(this.brickShape[this.brickShapeState], { x: this.position.x + 20, y: this.position.y }) &&
-            !this.checkIfAnyBlockHasSamePosition(this.brickShape[this.brickShapeState], { x: this.position.x + 20, y: this.position.y })) {
+        if (this.canChangeXPosition(20)) {
             this.speedX = 20;
         }
     }
