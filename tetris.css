@@ -28,13 +28,12 @@ body {
 }
 
 canvas {
-    /* background: #fff; */
     background: #000;
 }
 
-.pause-info,
-.game-over-info,
-.welcome-info {
+.pause-info-panel,
+.game-over-info-panel,
+.welcome-info-panel {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -42,9 +41,9 @@ canvas {
     left: 0;
 }
 
-.pause-info,
-.game-over-info,
-.welcome-info {
+.pause-info-panel,
+.game-over-info-panel,
+.welcome-info-panel {
     color: #fff;
     text-align: center;
     line-height: 1.7em;
@@ -52,9 +51,9 @@ canvas {
     user-select: none;
 }
 
-.pause-info,
-.game-over-info,
-.welcome-info,
+.pause-info-panel,
+.game-over-info-panel,
+.welcome-info-panel,
 .new-best-score {
     display: none;
 }

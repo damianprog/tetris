@@ -8,16 +8,24 @@ export default class Game {
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
         this.gameState = GAME_STATE.WELCOME_MENU;
-        this.gameOverInfo = document.querySelector(".game-over-info");
-        this.welcomeInfo = document.querySelector(".welcome-info");
-        this.pauseInfo = document.querySelector(".pause-info");
+        this.inputHandler = new InputHandler(this.activeBrick, this);
+        this.initializeInfoPanels();
+        this.initializeQuantities();
+        this.initializeDefaults();
+    }
+
+    initializeInfoPanels() {
+        this.gameOverInfoPanel = document.querySelector(".game-over-info-panel");
+        this.welcomeInfoPanel = document.querySelector(".welcome-info-panel");
+        this.pauseInfoPanel = document.querySelector(".pause-info-panel");
+    }
+
+    initializeQuantities() {
         this.linesQty = document.querySelector(".lines-qty");
         this.scoreQty = document.querySelector(".score-qty");
         this.bestScoreQty = document.querySelector(".best-score-qty");
         this.newBestScore = document.querySelector(".new-best-score");
         this.newBestScoreQty = document.querySelector(".new-best-score-qty");
-        this.inputHandler = new InputHandler(this.activeBrick, this);
-        this.initializeDefaults();
     }
 
     initializeDefaults() {
@@ -62,12 +70,12 @@ export default class Game {
     }
 
     showInfo() {
-        this.gameOverInfo.style.display = this.gameState === GAME_STATE.GAMEOVER ? "block" : "none";
-        this.pauseInfo.style.display = this.gameState === GAME_STATE.PAUSED ? "block" : "none";
+        this.gameOverInfoPanel.style.display = this.gameState === GAME_STATE.GAMEOVER ? "block" : "none";
+        this.pauseInfoPanel.style.display = this.gameState === GAME_STATE.PAUSED ? "block" : "none";
         this.newBestScore.style.display = this.gameState === GAME_STATE.GAMEOVER &&
             parseInt(this.scoreQty.innerHTML) >= parseInt(this.bestScoreQty.innerHTML) &&
             parseInt(this.scoreQty.innerHTML) != 0 ? "block" : "none";
-        this.welcomeInfo.style.display = this.gameState === GAME_STATE.WELCOME_MENU ? "block" : "none";
+        this.welcomeInfoPanel.style.display = this.gameState === GAME_STATE.WELCOME_MENU ? "block" : "none";
     }
 
     clear(ctx) {
