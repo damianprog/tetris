@@ -108,22 +108,25 @@ export default class Game {
         return blocksPosYQtyMap;
     }
 
-    removeFullLines(fullPositionsY) {
-        this.fallenBricksBlocksPositions = this.fallenBricksBlocksPositions.filter(position => fullPositionsY.indexOf(position.y) === -1);
+    removeFullLines(fullLinesPosY) {
+        this.fallenBricksBlocksPositions = this.fallenBricksBlocksPositions.filter(position => fullLinesPosY.indexOf(position.y) === -1);
     }
 
-    updateFallenBlocksPosY(fullPositionsY) {
+    updateFallenBlocksPosY(fullLinesPosY) {
         this.fallenBricksBlocksPositions.forEach((block, index) => {
-            const fullLinesBelowQty = fullPositionsY.filter(posY => posY > block.y).length;
+            const fullLinesBelowQty = fullLinesPosY.filter(posY => posY > block.y).length;
             this.fallenBricksBlocksPositions[index].y += (fullLinesBelowQty * 20);
         });
     }
 
-    updateScores(fullPositionsY) {
+    updateScores(fullLinesPosY) {
+        this.linesQty.innerHTML = parseInt(this.linesQty.innerHTML) + fullLinesPosY.length;
+        
+        let scoreQty = parseInt(this.scoreQty.innerHTML);
+        scoreQty = parseInt(this.scoreQty.innerHTML) + ((fullLinesPosY.length * 100) + ((fullLinesPosY.length - 1) * 100));
+        this.scoreQty.innerHTML = scoreQty;
+
         const bestScoreQty = parseInt(this.bestScoreQty.innerHTML);
-        this.linesQty.innerHTML = parseInt(this.linesQty.innerHTML) + fullPositionsY.length;
-        this.scoreQty.innerHTML = parseInt(this.scoreQty.innerHTML) + ((fullPositionsY.length * 100) + ((fullPositionsY.length - 1) * 100));
-        const scoreQty = parseInt(this.scoreQty.innerHTML);
         if (scoreQty >= bestScoreQty) {
             this.bestScoreQty.innerHTML = scoreQty;
             this.newBestScoreQty.innerHTML = scoreQty;
@@ -132,12 +135,12 @@ export default class Game {
 
     resolveFullLine() {
         const blocksPosYQtyMap = this.getBlocksPosYQtyMap();
-        const fullPositionsY = [...blocksPosYQtyMap.keys()].filter(posY => blocksPosYQtyMap.get(posY) === 10);
+        const fullLinesPosY = [...blocksPosYQtyMap.keys()].filter(posY => blocksPosYQtyMap.get(posY) === 10);
 
-        if (fullPositionsY.length > 0) {
-            this.removeFullLines(fullPositionsY);
-            this.updateFallenBlocksPosY(fullPositionsY);
-            this.updateScores(fullPositionsY);
+        if (fullLinesPosY.length > 0) {
+            this.removeFullLines(fullLinesPosY);
+            this.updateFallenBlocksPosY(fullLinesPosY);
+            this.updateScores(fullLinesPosY);
         }
     }
 

@@ -7,14 +7,12 @@ import {drawBlock} from "/src/drawBlock.js";
 export default class Brick {
 
     constructor(game) {
+        this.game = game;
         this.position = new Position(40,-20);
         this.brickBlocksPositions = [];
-        this.game = game;
-        this.columnsQty = 4;
         this.brickShape = this.getRandomBrickShape();
         this.brickShapeState = 0;
         this.blockSize = 20;
-        this.timeoutDone = true;
         this.speedX = 0;
         this.speedY = 0;
         this.setBrickFall();
@@ -34,13 +32,14 @@ export default class Brick {
 
     convertShapeToBlocksPositions(shape, position) {
         const blocksPositions = [];
+        const columnsQty = 4;
         let row = 0;
         let column = 0;
 
         shape.forEach((number, index) => {
             if (number === 1) {
-                row = Math.floor(index / this.columnsQty);
-                column = index % this.columnsQty;
+                row = Math.floor(index / columnsQty);
+                column = index % columnsQty;
                 const currentBlockPosX = position.x + (column * this.blockSize);
                 const currentBlockPosY = position.y + (row * this.blockSize);
                 blocksPositions.push(new Position(currentBlockPosX, currentBlockPosY));
@@ -51,8 +50,8 @@ export default class Brick {
     }
 
     checkIfAnyBlockHasSamePosition(brick, position) {
-        const brickPositions = this.convertShapeToBlocksPositions(brick, position);
-        return brickPositions.some(currentBlockPos => {
+        const brickBlocksPositions = this.convertShapeToBlocksPositions(brick, position);
+        return brickBlocksPositions.some(currentBlockPos => {
             return this.game.fallenBricksBlocksPositions
                 .some(fallenBlockPos => fallenBlockPos.x === currentBlockPos.x && fallenBlockPos.y === currentBlockPos.y);
         });
