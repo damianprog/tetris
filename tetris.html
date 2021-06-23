@@ -1,35 +1,33 @@
 <!DOCTYPE html>
 <html lang="eng">
-
-<head>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="stylesheet" type="text/css" href="tetris.css">
+  <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="stylesheet" type="text/css" href="tetris.css" />
     <title>Tetris</title>
     <meta charset="UTF-8" />
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="main-container">
-        <div class="welcome-info-panel">
-            <p>Tetris</p>
-            <p>Press<br>SPACEBAR<br>to start</p>
-        </div>
-        <div class="game-over-info-panel">
-            <p>Game Over</p>
-            <p class="new-best-score">New Best Score!<br><span class="new-best-score-qty"></span></p>
-            <p>Press<br>SPACEBAR<br>to restart</p>
-        </div>
-        <div class="pause-info-panel"><p>Paused</p></div>
-        <canvas width="200" height="400">
-        </canvas>
-        <div class="labels">
-            <p>Lines:<span class="lines-qty"></span></p>
-            <p>Score:<span class="score-qty"></span></p>
-            <p>Best<br>Score:<span class="best-score-qty"></span></p>
-        </div>
+      <div class="welcome-info-panel">
+        <p>Tetris</p>
+        <p>Press<br />SPACEBAR<br />to start</p>
+      </div>
+      <div class="game-over-info-panel">
+        <p>Game Over</p>
+        <p class="new-best-score">
+          New Best Score!<br /><span class="new-best-score-qty"></span>
+        </p>
+        <p>Press<br />SPACEBAR<br />to restart</p>
+      </div>
+      <div class="pause-info-panel"><p>Paused</p></div>
+      <canvas width="200" height="400"> </canvas>
+      <div class="labels">
+        <p>Lines:<span class="lines-qty"></span></p>
+        <p>Score:<span class="score-qty"></span></p>
+        <p>Best<br />Score:<span class="best-score-qty"></span></p>
+      </div>
     </div>
-
     <script type="module" src="src/index.js"></script>
-</body>
-
+  </body>
 </html>
